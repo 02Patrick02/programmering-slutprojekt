@@ -16,7 +16,6 @@ namespace Template
 
 
 
-
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public int Health { get; set; }
@@ -84,7 +83,7 @@ namespace Template
         protected bool IsTouchingTop(BaseClass sprite)
         {
             if (sprite is Player)
-                ((Player)sprite)._gravity = Vector2.Zero;
+                ((Player)sprite).gravity = Vector2.Zero;
 
             return Rectangle.Bottom + Velocity.Y > sprite.Rectangle.Top &&
               Rectangle.Top < sprite.Rectangle.Top &&
@@ -94,6 +93,7 @@ namespace Template
 
         protected bool IsTouchingBottom(BaseClass sprite)
         {
+
             return Rectangle.Top + Velocity.Y < sprite.Rectangle.Bottom &&
               Rectangle.Bottom > sprite.Rectangle.Bottom &&
               Rectangle.Right > sprite.Rectangle.Left &&

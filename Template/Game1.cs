@@ -12,7 +12,7 @@ namespace Template
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Texture2D _default, _ground, _wall, _underground, _playerTex;
+        private Texture2D ground, wall, underground, playerTex, enemyTex;
         List<BaseClass> sprites;
         const int BLOCK_SIZE = 80;
 
@@ -58,17 +58,17 @@ namespace Template
         {
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            _ground = Content.Load<Texture2D>("Ground");
-            _wall = Content.Load<Texture2D>("Wall");
-            _playerTex = Content.Load<Texture2D>("PlayerTex");
-            _underground = Content.Load<Texture2D>("Underground");
+            ground = Content.Load<Texture2D>("Ground");
+            wall = Content.Load<Texture2D>("Wall");
+            playerTex = Content.Load<Texture2D>("PlayerTex");
+            enemyTex = Content.Load<Texture2D>("enemyTex");
+            underground = Content.Load<Texture2D>("Underground");
 
-            _default = new Texture2D(GraphicsDevice, 1, 1);
-            _default.SetData(new Color[1] { Color.White });
 
             sprites = new List<BaseClass>()
             {
-               new Player(_playerTex, new Vector2(200, 200), new Point(100, 100)),
+               new Player(playerTex, new Vector2(200, 200), new Point(100, 100)),
+               new enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
             };
 
             for (int i = 0; i < Map.GetLength(1); i++) // Tile X
@@ -77,16 +77,16 @@ namespace Template
                 {
                     if (Map[j, i] == 0)
                     {
-                        sprites.Add(new Wall(_ground, new Rectangle(BLOCK_SIZE * i, BLOCK_SIZE * j, BLOCK_SIZE, BLOCK_SIZE)));
+                        sprites.Add(new Wall(ground, new Rectangle(BLOCK_SIZE * i, BLOCK_SIZE * j, BLOCK_SIZE, BLOCK_SIZE)));
                     }
 
                     else if (Map[j, i] == 2)
                     {
-                        sprites.Add(new Wall(_wall, new Rectangle(BLOCK_SIZE * i, BLOCK_SIZE * j, BLOCK_SIZE, BLOCK_SIZE)));
+                        sprites.Add(new Wall(wall, new Rectangle(BLOCK_SIZE * i, BLOCK_SIZE * j, BLOCK_SIZE, BLOCK_SIZE)));
                     }
                     else if (Map[j, i] == 3)
                     {
-                        sprites.Add(new Wall(_underground, new Rectangle(BLOCK_SIZE * i, BLOCK_SIZE * j, BLOCK_SIZE, BLOCK_SIZE)));
+                        sprites.Add(new Wall(underground, new Rectangle(BLOCK_SIZE * i, BLOCK_SIZE * j, BLOCK_SIZE, BLOCK_SIZE)));
                     }
                 }
             }
