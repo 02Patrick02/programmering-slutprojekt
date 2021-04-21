@@ -16,6 +16,7 @@ namespace Template
 
 
 
+
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public int Health { get; set; }
@@ -28,7 +29,7 @@ namespace Template
         }
 
 
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
 
 
@@ -82,8 +83,6 @@ namespace Template
 
         protected bool IsTouchingTop(BaseClass sprite)
         {
-            if (sprite is Player)
-                ((Player)sprite).gravity = Vector2.Zero;
 
             return Rectangle.Bottom + Velocity.Y > sprite.Rectangle.Top &&
               Rectangle.Top < sprite.Rectangle.Top &&

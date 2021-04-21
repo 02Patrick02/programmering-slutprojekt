@@ -61,14 +61,14 @@ namespace Template
             ground = Content.Load<Texture2D>("Ground");
             wall = Content.Load<Texture2D>("Wall");
             playerTex = Content.Load<Texture2D>("PlayerTex");
-            enemyTex = Content.Load<Texture2D>("enemyTex");
+            enemyTex = Content.Load<Texture2D>("Enemy");
             underground = Content.Load<Texture2D>("Underground");
 
 
             sprites = new List<BaseClass>()
             {
                new Player(playerTex, new Vector2(200, 200), new Point(100, 100)),
-               new enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
+               new Enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
             };
 
             for (int i = 0; i < Map.GetLength(1); i++) // Tile X
@@ -106,7 +106,7 @@ namespace Template
 
             foreach (var sprite in sprites)
             {
-                sprite.Update();
+                sprite.Update(gameTime);
             }
 
 

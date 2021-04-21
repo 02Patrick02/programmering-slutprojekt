@@ -11,38 +11,53 @@ namespace Template
 {
     class Player : BaseClass
     {
-        public Vector2 _gravity;
+        private GameTime oldGameTime;
+        private KeyboardState oldA;
+        
+        private Vector2 acceleraion = new Vector2(0, 1);
         public Player(Texture2D tex, Vector2 position, Point size) : base(tex)
         {
             Position = position;
             rectangle = new Rectangle(Position.ToPoint(), size);
+            
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             KeyboardState a = Keyboard.GetState();
+            if(oldA == null)
+            {
+                oldA = a;
+            }
+            
 
-            Velocity = Vector2.Zero;
+            Velocity = new Vector2(0, Velocity.Y);
 
-            Move(a);
+            if (oldGameTime == null)
+                oldGameTime = gameTime;
 
-            _gravity.Y += 9.82f * 1f / 60f; // Gravitation
-            if (_gravity.Y > 20)
-                _gravity.Y = 20;
+            Move(a, oldA);
 
-            Velocity = new Vector2(Velocity.X, Velocity.Y + _gravity.Y);
+            double updateTime = gameTime.ElapsedGameTime.TotalMilliseconds - oldGameTime.ElapsedGameTime.TotalMilliseconds;
+            float timeScalar = (float)updateTime / 20f;
+            Velocity += acceleraion;
+           
+
 
             rectangle = new Rectangle(Position.ToPoint(), rectangle.Size);
+
+            oldGameTime = gameTime;
+            oldA = a;
         }
 
-        private void Move(KeyboardState a)
+        private void Move(KeyboardState a, KeyboardState oldA)
         {
             if (a.IsKeyDown(Keys.D))
                 Velocity = new Vector2(10, Velocity.Y);
             if (a.IsKeyDown(Keys.A))
                 Velocity = new Vector2(-10, Velocity.Y);
 
-            if (a.IsKeyDown(Keys.Space))
+            if (a.IsKeyDown(Keys.Space) && !oldA.IsKeyDown(Keys.Space))
                 Velocity = new Vector2(Velocity.X, -25);
         }
     }
