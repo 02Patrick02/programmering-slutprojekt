@@ -9,14 +9,16 @@ namespace Template
 
     public class Game1 : Game
     {
+
+        Player P;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Texture2D ground, wall, underground, playerTex, enemyTex;
+        private Texture2D ground, wall, underground, playerTex, enemyTex, SkottTex;
         List<BaseClass> sprites;
         const int BLOCK_SIZE = 80;
 
-
+        private List<Vector2> SpelareSkottPos = new List<Vector2>();
 
 
         static int[,] Map = new int[,]
@@ -42,6 +44,7 @@ namespace Template
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+          
         }
 
         protected override void Initialize()
@@ -61,14 +64,15 @@ namespace Template
             ground = Content.Load<Texture2D>("Ground");
             wall = Content.Load<Texture2D>("Wall");
             playerTex = Content.Load<Texture2D>("PlayerTex");
-            enemyTex = Content.Load<Texture2D>("Enemy");
+            enemyTex = Content.Load<Texture2D>("enemy");
             underground = Content.Load<Texture2D>("Underground");
+            SkottTex = Content.Load<Texture2D>("SkottTex");
 
 
             sprites = new List<BaseClass>()
             {
                new Player(playerTex, new Vector2(200, 200), new Point(100, 100)),
-               new Enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
+               new enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
             };
 
             for (int i = 0; i < Map.GetLength(1); i++) // Tile X
@@ -104,6 +108,7 @@ namespace Template
             if (a.IsKeyDown(Keys.Escape))
                 Exit();
 
+            
             foreach (var sprite in sprites)
             {
                 sprite.Update(gameTime);
@@ -124,7 +129,6 @@ namespace Template
                 }
                 spriteA.Position += spriteA.Velocity;
 
-
             }
 
             base.Update(gameTime);
@@ -140,10 +144,22 @@ namespace Template
                 sprite.Draw(spriteBatch);
             }
 
+            foreach (Vector2 SpelareSkottPos in SpelareSkottPos)
+            {
+                Rectangle rec = new Rectangle();
+                rec.Location = SpelareSkottPos.ToPoint();
+                rec.Size = new Point(40, 40);
+                spriteBatch.Draw(SkottTex, rec, Color.White);
+            }
 
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+           
+
         }
     }
 }
