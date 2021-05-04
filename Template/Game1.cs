@@ -9,16 +9,13 @@ namespace Template
 
     public class Game1 : Game
     {
-
-        Player P;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Texture2D ground, wall, underground, playerTex, enemyTex, SkottTex;
-        List<BaseClass> sprites;
+        private Texture2D ground, wall, underground, playerTex, enemyTex, bulletTex;
+        private List<BaseClass> sprites;
         const int BLOCK_SIZE = 80;
 
-        private List<Vector2> SpelareSkottPos = new List<Vector2>();
 
 
         static int[,] Map = new int[,]
@@ -66,12 +63,13 @@ namespace Template
             playerTex = Content.Load<Texture2D>("PlayerTex");
             enemyTex = Content.Load<Texture2D>("enemy");
             underground = Content.Load<Texture2D>("Underground");
-            SkottTex = Content.Load<Texture2D>("SkottTex");
+            bulletTex = Content.Load<Texture2D>("Bullet");
+        
 
 
             sprites = new List<BaseClass>()
             {
-               new Player(playerTex, new Vector2(200, 200), new Point(100, 100)),
+               new Player(playerTex, bulletTex, new Vector2(200, 200), new Point(100, 100)),
                new enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
             };
 
@@ -108,7 +106,7 @@ namespace Template
             if (a.IsKeyDown(Keys.Escape))
                 Exit();
 
-            
+            AddChildren();
             foreach (var sprite in sprites)
             {
                 sprite.Update(gameTime);
@@ -130,7 +128,7 @@ namespace Template
                 spriteA.Position += spriteA.Velocity;
 
             }
-
+            
             base.Update(gameTime);
         }
 
@@ -144,22 +142,20 @@ namespace Template
                 sprite.Draw(spriteBatch);
             }
 
-            foreach (Vector2 SpelareSkottPos in SpelareSkottPos)
-            {
-                Rectangle rec = new Rectangle();
-                rec.Location = SpelareSkottPos.ToPoint();
-                rec.Size = new Point(40, 40);
-                spriteBatch.Draw(SkottTex, rec, Color.White);
-            }
-
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
-        public void Draw(SpriteBatch spriteBatch)
+        private void AddChildren()
         {
-           
+            for (int i = 0; i < sprites.Count; i++)
+            {
+                var sprite = sprites[i];
+                foreach (var child in sprite.Children)
+                    sprites.Add(child);
 
-        }
+                sprite.Children = new List<BaseClass>();
+            }
+        } 
     }
 }

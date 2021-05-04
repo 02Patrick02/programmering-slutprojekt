@@ -16,7 +16,7 @@ namespace Template
             rectangle = new Rectangle(Position.ToPoint(), size);
         }
 
-        public override void Update()
+        public override void Update(GameTime gametime)
         {
 
         }

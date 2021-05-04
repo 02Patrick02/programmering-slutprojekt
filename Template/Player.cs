@@ -12,23 +12,18 @@ namespace Template
     class Player : BaseClass
     {
         private GameTime oldGameTime;
-        private KeyboardState oldA;
+        private KeyboardState oldA, a;
         private Rectangle SkottRec;
+        private Texture2D bulletTex;
         
-        
-        private Vector2 acceleraion = new Vector2(0, 1), SkottPos;
+        private Vector2 acceleraion = new Vector2(0, 1);
 
-        private List<Vector2> SpelareSkottPos = new List<Vector2>();
 
-        public Player (Texture2D tex, List<Vector2> SkottLista) : base(tex)
-        {
-            SpelareSkottPos = SkottLista;
-        }
-
-        public Player(Texture2D tex, Vector2 position, Point size) : base(tex)
+        public Player(Texture2D tex, Texture2D bulletTex, Vector2 position, Point size) : base(tex)
         {
             Position = position;
             rectangle = new Rectangle(Position.ToPoint(), size);
+            this.bulletTex = bulletTex;
         }
 
         public Rectangle Skottrec
@@ -36,13 +31,25 @@ namespace Template
             get { return SkottRec; }
             set { SkottRec = value; }
         }
+        private void Shoot()
+        {
+            if (a.IsKeyDown(Keys.Left))
+                Children.Add(new Bullet(bulletTex, 1)
+                {
+                    Parent = this,
+                    Position = this.Position
+                });
+            if (a.IsKeyDown(Keys.Right))
+                Children.Add(new Bullet(bulletTex, 2));
+            if (a.IsKeyDown(Keys.Up))
+                Children.Add(new Bullet(bulletTex, 3));
+
+        }
+        
 
         public override void Update(GameTime gameTime)
         {
-            SkottRec = new Rectangle((int)SkottPos.X, (int)SkottPos.Y, 150, 150);
-
-
-            KeyboardState a = Keyboard.GetState();
+           a = Keyboard.GetState();
 
             if(oldA == null)
             {
@@ -53,15 +60,6 @@ namespace Template
 
             if (oldGameTime == null)
                 oldGameTime = gameTime;
-
-            if (a.IsKeyDown(Keys.Z) && a.IsKeyUp(Keys.Z))
-            {
-                SpelareSkottPos.Add(Position + new Vector2(89, 0));
-            }
-            for (int i = 0; i < SpelareSkottPos.Count; i++)
-            {
-                SpelareSkottPos[i] = SpelareSkottPos[i] - new Vector2(0, 5);
-            }
 
             Move(a, oldA);
 
@@ -85,6 +83,5 @@ namespace Template
             if (a.IsKeyDown(Keys.Space) && !oldA.IsKeyDown(Keys.Space))
                 Velocity = new Vector2(Velocity.X, -25);
         }
-
     }
 }

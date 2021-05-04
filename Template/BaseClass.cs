@@ -15,11 +15,12 @@ namespace Template
         protected Rectangle rectangle;
 
 
-
-
+        public List<BaseClass> Children { get; set; }
+        public BaseClass Parent;
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public int Health { get; set; }
+        public int Speed { get; set; }
 
 
         public Rectangle Rectangle
@@ -43,6 +44,7 @@ namespace Template
         public BaseClass(Texture2D tex)
         {
             texture = tex;
+            Children = new List<BaseClass>();
         }
         public bool Intersects(BaseClass sprite)
         {
