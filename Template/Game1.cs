@@ -12,7 +12,7 @@ namespace Template
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Texture2D ground, wall, underground, playerTex, enemyTex, bulletTex;
+        private Texture2D defaultTex, ground, wall, underground, playerTex, enemyTex, bulletTex;
         private List<BaseClass> sprites;
         const int BLOCK_SIZE = 80;
 
@@ -56,6 +56,8 @@ namespace Template
 
         protected override void LoadContent()
         {
+            defaultTex = new Texture2D(GraphicsDevice, 1, 1);
+            defaultTex.SetData(new Color[1] { Color.White });
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ground = Content.Load<Texture2D>("Ground");
@@ -70,7 +72,7 @@ namespace Template
             sprites = new List<BaseClass>()
             {
                new Player(playerTex, bulletTex, new Vector2(200, 200), new Point(100, 100)),
-               new enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
+               new Enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
             };
 
             for (int i = 0; i < Map.GetLength(1); i++) // Tile X
@@ -107,27 +109,38 @@ namespace Template
                 Exit();
 
             AddChildren();
+
             foreach (var sprite in sprites)
             {
                 sprite.Update(gameTime);
             }
 
+            var collidableSprites = sprites.Where(sprite => sprite is ICollidable) as BaseClass[] ?? sprites.Where(c => c is ICollidable).ToArray();
 
-            foreach (var spriteA in sprites)
+            foreach (var spriteA in collidableSprites)
             {
                 foreach (var spriteB in sprites)
                 {
                     if (spriteA == spriteB)
                         continue;
 
+                    if ((spriteA is Player && spriteB is Bullet) ||
+                        (spriteA is Bullet && spriteB is Player))
+                        continue;
+
+                    if (spriteA is Bullet && spriteB is Bullet)
+                        continue;
+
                     if (spriteA.Intersects(spriteB))
                     {
-
+                        ((ICollidable)spriteA).OnCollide(spriteB);
                     }
                 }
                 spriteA.Position += spriteA.Velocity;
 
             }
+
+            RemoveSprites();
             
             base.Update(gameTime);
         }
@@ -142,20 +155,40 @@ namespace Template
                 sprite.Draw(spriteBatch);
             }
 
+            //foreach (var sprite in sprites)
+            //{
+            //    spriteBatch.Draw(defaultTex, sprite.Rectangle, Color.Blue);
+            //}
+
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
         private void AddChildren()
         {
             for (int i = 0; i < sprites.Count; i++)
             {
                 var sprite = sprites[i];
-                foreach (var child in sprite.Children)
-                    sprites.Add(child);
+                for (int j = 0; j < sprite.Children.Count; j++)
+                {
+                    sprites.Add(sprite.Children[j]);
+                }
+                    
 
                 sprite.Children = new List<BaseClass>();
             }
         } 
+        
+        private void RemoveSprites()
+        {
+            for (int i = 0; i < sprites.Count; i++)
+            {
+                if (!sprites[i].IsRemoved) continue;
+
+                sprites.RemoveAt(i);
+                i--;
+            }
+        }
     }
 }

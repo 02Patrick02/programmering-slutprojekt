@@ -18,6 +18,7 @@ namespace Template
         public List<BaseClass> Children { get; set; }
         public BaseClass Parent;
         public Vector2 Position { get; set; }
+        public bool IsRemoved { get; protected set; }
         public Vector2 Velocity { get; set; }
         public int Health { get; set; }
         public int Speed { get; set; }

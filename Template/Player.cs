@@ -9,12 +9,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Template
 {
-    class Player : BaseClass
+    class Player : BaseClass, ICollidable
     {
         private GameTime oldGameTime;
         private KeyboardState oldA, a;
-        private Rectangle SkottRec;
         private Texture2D bulletTex;
+        private int jumpCooldown;
         
         private Vector2 acceleraion = new Vector2(0, 1);
 
@@ -26,24 +26,34 @@ namespace Template
             this.bulletTex = bulletTex;
         }
 
-        public Rectangle Skottrec
-        {
-            get { return SkottRec; }
-            set { SkottRec = value; }
-        }
         private void Shoot()
         {
             if (a.IsKeyDown(Keys.Left))
                 Children.Add(new Bullet(bulletTex, 1)
                 {
                     Parent = this,
-                    Position = this.Position
+                    Position = this.Position,
+                    Rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, 50, 50),
+                    Speed = 5
                 });
-            if (a.IsKeyDown(Keys.Right))
-                Children.Add(new Bullet(bulletTex, 2));
-            if (a.IsKeyDown(Keys.Up))
-                Children.Add(new Bullet(bulletTex, 3));
 
+            if (a.IsKeyDown(Keys.Right))
+                Children.Add(new Bullet(bulletTex, 2)
+                {
+                    Parent = this,
+                    Position = this.Position,
+                    Rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, 50, 50),
+                    Speed = 5
+                });
+
+            if (a.IsKeyDown(Keys.Up))
+                Children.Add(new Bullet(bulletTex, 3)
+                {
+                    Parent = this,
+                    Position = this.Position,
+                    Rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, 50, 50),
+                    Speed = 5
+                });
         }
         
 
@@ -58,16 +68,20 @@ namespace Template
             
             Velocity = new Vector2(0, Velocity.Y);
 
+           
+            Shoot();
+
             if (oldGameTime == null)
                 oldGameTime = gameTime;
 
             Move(a, oldA);
 
-            double updateTime = gameTime.ElapsedGameTime.TotalMilliseconds - oldGameTime.ElapsedGameTime.TotalMilliseconds;
-            float timeScalar = (float)updateTime / 20f;
             Velocity += acceleraion;
            
             rectangle = new Rectangle(Position.ToPoint(), rectangle.Size);
+
+            if (jumpCooldown > 0)
+                jumpCooldown--;
 
             oldGameTime = gameTime;
             oldA = a;
@@ -77,11 +91,22 @@ namespace Template
         {
             if (a.IsKeyDown(Keys.D))
                 Velocity = new Vector2(10, Velocity.Y);
+
             if (a.IsKeyDown(Keys.A))
                 Velocity = new Vector2(-10, Velocity.Y);
 
+            if (jumpCooldown != 0) return;
+
             if (a.IsKeyDown(Keys.Space) && !oldA.IsKeyDown(Keys.Space))
+            {
                 Velocity = new Vector2(Velocity.X, -25);
+                jumpCooldown = 45;
+            }
+        }
+
+        public void OnCollide(BaseClass sprite)
+        {
+            
         }
     }
 }

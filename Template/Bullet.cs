@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 namespace Template
 {
-    class Bullet : BaseClass
+    class Bullet : BaseClass, ICollidable
     {
         private int direction;
         public Bullet(Texture2D tex, int direction) : base(tex)
@@ -25,6 +25,19 @@ namespace Template
             if (direction == 3)
                 Velocity = new Vector2(0, -Speed);
 
+            rectangle = new Rectangle(Position.ToPoint(), rectangle.Size);
+        }
+        public override void Draw(SpriteBatch spritebatch)
+        {
+            base.Draw(spritebatch);
+        }
+
+        public void OnCollide(BaseClass sprite)
+        {
+            if (sprite is Wall)
+                IsRemoved = true;
+            if (sprite is Enemy)
+                IsRemoved = true;
         }
     }
 }
