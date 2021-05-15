@@ -16,6 +16,14 @@ namespace Template
         private List<BaseClass> sprites;
         const int BLOCK_SIZE = 80;
 
+        public enum GameState
+        {
+            MainMenu,
+            LevelSelect,
+            Level1
+        }
+        GameState CurrentState = GameState.MainMenu;
+
 
 
         static int[,] Map = new int[,]
@@ -32,7 +40,7 @@ namespace Template
             {2, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1 ,2},
             {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,2},
             {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,2},
-            {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,2},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0},
             {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 ,3}
         };
 
@@ -72,7 +80,7 @@ namespace Template
             sprites = new List<BaseClass>()
             {
                new Player(playerTex, bulletTex, new Vector2(200, 200), new Point(100, 100)),
-               new Enemy(enemyTex, new Vector2(200, 200), new Point(100, 100)),
+               new Enemy(enemyTex, new Vector2(200, 200), new Point(100, 100), (int) 2),
             };
 
             for (int i = 0; i < Map.GetLength(1); i++) // Tile X
@@ -137,7 +145,19 @@ namespace Template
                     }
                 }
                 spriteA.Position += spriteA.Velocity;
+            }
 
+            switch (CurrentState)
+            {
+                case GameState.MainMenu:
+                    if (Keyboard.GetState().IsKeyDown(Keys.W))
+                        CurrentState = GameState.LevelSelect;
+                    break;
+
+                case GameState.LevelSelect:
+                    if (Keyboard.GetState().IsKeyDown(Keys.S))
+                        CurrentState = GameState.MainMenu;
+                    break;
             }
 
             RemoveSprites();
@@ -153,6 +173,17 @@ namespace Template
             foreach (var sprite in sprites)
             {
                 sprite.Draw(spriteBatch);
+            }
+
+            switch (CurrentState)
+            {
+                case GameState.MainMenu:
+                    GraphicsDevice.Clear(Color.White);
+                    break;
+
+                case GameState.LevelSelect:
+                    GraphicsDevice.Clear(Color.Black);
+                    break;
             }
 
             //foreach (var sprite in sprites)

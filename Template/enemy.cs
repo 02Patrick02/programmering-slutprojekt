@@ -10,10 +10,12 @@ namespace Template
 {
     class Enemy : BaseClass, ICollidable
     {
-        public Enemy(Texture2D tex, Vector2 position, Point size) : base(tex)
+        public Enemy(Texture2D tex, Vector2 position, Point size, int health) : base(tex)
         {
             Position = position;
-            rectangle = new Rectangle(Position.ToPoint(), size);
+            rectangle = new Rectangle(position.ToPoint(), size);
+            Health = health;
+           
         }
 
         public void OnCollide(BaseClass sprite)

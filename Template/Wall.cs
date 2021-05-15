@@ -16,6 +16,5 @@ namespace Template
             Rectangle = rectangle;
         }
 
-
     }
 }

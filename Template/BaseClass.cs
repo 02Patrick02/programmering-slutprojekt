@@ -13,6 +13,7 @@ namespace Template
     {
         protected Texture2D texture;
         protected Rectangle rectangle;
+        protected Vector2 direction, position, velocity;
 
 
         public List<BaseClass> Children { get; set; }
@@ -22,13 +23,14 @@ namespace Template
         public Vector2 Velocity { get; set; }
         public int Health { get; set; }
         public int Speed { get; set; }
-
+        public Vector2 Direction { get; set; }
 
         public Rectangle Rectangle
         {
             get { return rectangle; }
             set { rectangle = value; }
         }
+
 
 
         public virtual void Update(GameTime gameTime)
