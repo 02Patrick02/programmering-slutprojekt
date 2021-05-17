@@ -13,8 +13,6 @@ namespace Template
     {
         protected Texture2D texture;
         protected Rectangle rectangle;
-        protected Vector2 direction, position, velocity;
-
 
         public List<BaseClass> Children { get; set; }
         public BaseClass Parent;
@@ -23,6 +21,7 @@ namespace Template
         public Vector2 Velocity { get; set; }
         public int Health { get; set; }
         public int Speed { get; set; }
+        public Point Size { get; set; }
         public Vector2 Direction { get; set; }
 
         public Rectangle Rectangle
@@ -30,6 +29,7 @@ namespace Template
             get { return rectangle; }
             set { rectangle = value; }
         }
+
 
 
 

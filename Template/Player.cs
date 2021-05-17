@@ -106,7 +106,8 @@ namespace Template
 
         public void OnCollide(BaseClass sprite)
         {
-            
+            if (sprite is Enemy)
+                IsRemoved = true;
         }
     }
 }

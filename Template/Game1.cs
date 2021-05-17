@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace Template
 {
@@ -14,8 +16,13 @@ namespace Template
 
         private Texture2D defaultTex, ground, wall, underground, playerTex, enemyTex, bulletTex;
         private List<BaseClass> sprites;
+        private List<Player> player;
+
         const int BLOCK_SIZE = 80;
 
+
+        private Random rnd = new Random();
+            
         public enum GameState
         {
             MainMenu,
@@ -64,8 +71,8 @@ namespace Template
 
         protected override void LoadContent()
         {
-            defaultTex = new Texture2D(GraphicsDevice, 1, 1);
-            defaultTex.SetData(new Color[1] { Color.White });
+          //  defaultTex = new Texture2D(GraphicsDevice, 1, 1);
+            //defaultTex.SetData(new Color[1] { Color.White });
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ground = Content.Load<Texture2D>("Ground");
@@ -74,13 +81,19 @@ namespace Template
             enemyTex = Content.Load<Texture2D>("enemy");
             underground = Content.Load<Texture2D>("Underground");
             bulletTex = Content.Load<Texture2D>("Bullet");
-        
+
 
 
             sprites = new List<BaseClass>()
             {
-               new Player(playerTex, bulletTex, new Vector2(200, 200), new Point(100, 100)),
-               new Enemy(enemyTex, new Vector2(200, 200), new Point(100, 100), (int) 2),
+               new Player(playerTex, bulletTex, new Vector2(800, 350), new Point(100, 100)),
+               new Enemy(enemyTex)
+               {
+                   Position = new Vector2(300, 300),
+                   Size = new Point(100, 100),
+                   Health = 2,
+                   Speed = 5
+               }
             };
 
             for (int i = 0; i < Map.GetLength(1); i++) // Tile X
@@ -102,6 +115,7 @@ namespace Template
                     }
                 }
             }
+            player = sprites.OfType<Player>().ToList();
         }
 
 
@@ -117,6 +131,7 @@ namespace Template
                 Exit();
 
             AddChildren();
+
 
             foreach (var sprite in sprites)
             {
@@ -147,6 +162,16 @@ namespace Template
                 spriteA.Position += spriteA.Velocity;
             }
 
+
+            var enemies = sprites.Where(sprite => sprite is Enemy) as BaseClass[] ?? sprites.Where(c => c is Enemy).ToArray();
+            
+            foreach(Enemy enemy in enemies)
+            {
+                enemy.Update(gameTime, player[0].Position);
+            }
+
+
+
             switch (CurrentState)
             {
                 case GameState.MainMenu:
@@ -159,6 +184,9 @@ namespace Template
                         CurrentState = GameState.MainMenu;
                     break;
             }
+
+            if (player[0].IsRemoved)
+                Exit();
 
             RemoveSprites();
             

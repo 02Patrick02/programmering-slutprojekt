@@ -10,12 +10,10 @@ namespace Template
 {
     class Enemy : BaseClass, ICollidable
     {
-        public Enemy(Texture2D tex, Vector2 position, Point size, int health) : base(tex)
+        private Vector2 direction;
+        public Enemy(Texture2D tex) : base(tex)
         {
-            Position = position;
-            rectangle = new Rectangle(position.ToPoint(), size);
-            Health = health;
-           
+            Rectangle = new Rectangle(Position.ToPoint(), Size);
         }
 
         public void OnCollide(BaseClass sprite)
@@ -24,10 +22,36 @@ namespace Template
                 Health--;
         }
 
-        public override void Update(GameTime gametime)
+        public void Update(GameTime gameTime, Vector2 playerPos)
         {
+            direction = playerPos - Position;
+            direction.Normalize();
+
+            Velocity = direction * Speed; // Direction --> Velocity
+
+            if (Velocity.X > 3) // X Velocity not bigger than 3
+                Velocity = new Vector2 (3, 0);
+
+            else if (Velocity.X < 0 - 3) // X Velocity not smaller than -3
+                Velocity = new Vector2(-3, 0);
+
+            if (Velocity.Y > 3) // Y Velocity not bigger than 3
+                Velocity = new Vector2(0, 3);
+
+            else if (Velocity.Y < 0 - 3) // Y Velocity not smaller than -3
+                Velocity = new Vector2(0, -3);
+
+            Position += Velocity;
+
+            Rectangle = new Rectangle(Position.ToPoint(), Size);
+
+
             if (Health < 0)
                 IsRemoved = true;
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, Rectangle, Color.Red);
         }
     }
 }
