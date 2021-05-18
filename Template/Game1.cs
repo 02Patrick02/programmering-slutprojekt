@@ -14,22 +14,25 @@ namespace Template
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        private Texture2D defaultTex, ground, wall, underground, playerTex, enemyTex, bulletTex;
+        private Texture2D ground, wall, underground, playerTex, enemyTex, bulletTex;
+
         private List<BaseClass> sprites;
         private List<Player> player;
 
-        const int BLOCK_SIZE = 80;
+        private const int BLOCK_SIZE = 80;
+        private int enemySpawnRate = 60;
+
 
 
         private Random rnd = new Random();
             
         public enum GameState
         {
-            MainMenu,
+            MainColor,
             LevelSelect,
             Level1
         }
-        GameState CurrentState = GameState.MainMenu;
+        GameState CurrentState = GameState.MainColor;
 
 
 
@@ -65,14 +68,14 @@ namespace Template
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             graphics.ApplyChanges();
 
+            
             base.Initialize();
         }
 
 
         protected override void LoadContent()
         {
-          //  defaultTex = new Texture2D(GraphicsDevice, 1, 1);
-            //defaultTex.SetData(new Color[1] { Color.White });
+          
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ground = Content.Load<Texture2D>("Ground");
@@ -87,13 +90,6 @@ namespace Template
             sprites = new List<BaseClass>()
             {
                new Player(playerTex, bulletTex, new Vector2(800, 350), new Point(100, 100)),
-               new Enemy(enemyTex)
-               {
-                   Position = new Vector2(300, 300),
-                   Size = new Point(100, 100),
-                   Health = 2,
-                   Speed = 5
-               }
             };
 
             for (int i = 0; i < Map.GetLength(1); i++) // Tile X
@@ -151,6 +147,10 @@ namespace Template
                         (spriteA is Bullet && spriteB is Player))
                         continue;
 
+                    if ((spriteA is Enemy && spriteB is Wall) ||
+                        (spriteA is Wall && spriteB is Enemy))
+                        continue;
+
                     if (spriteA is Bullet && spriteB is Bullet)
                         continue;
 
@@ -170,18 +170,29 @@ namespace Template
                 enemy.Update(gameTime, player[0].Position);
             }
 
+            if(rnd.Next(enemySpawnRate) == 0)
+            {
+                sprites.Add(new Enemy(enemyTex)
+                {
+                    Position = new Vector2(rnd.Next(1920), -100),
+                    Size = new Point(100, 100),
+                    Health = 1,
+                    Speed = 2
+                });
+            }
+
 
 
             switch (CurrentState)
             {
-                case GameState.MainMenu:
+                case GameState.MainColor:
                     if (Keyboard.GetState().IsKeyDown(Keys.W))
                         CurrentState = GameState.LevelSelect;
                     break;
 
                 case GameState.LevelSelect:
                     if (Keyboard.GetState().IsKeyDown(Keys.S))
-                        CurrentState = GameState.MainMenu;
+                        CurrentState = GameState.MainColor;
                     break;
             }
 
@@ -205,7 +216,7 @@ namespace Template
 
             switch (CurrentState)
             {
-                case GameState.MainMenu:
+                case GameState.MainColor:
                     GraphicsDevice.Clear(Color.White);
                     break;
 
@@ -214,10 +225,7 @@ namespace Template
                     break;
             }
 
-            //foreach (var sprite in sprites)
-            //{
-            //    spriteBatch.Draw(defaultTex, sprite.Rectangle, Color.Blue);
-            //}
+            
 
             spriteBatch.End();
 

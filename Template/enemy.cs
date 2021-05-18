@@ -41,12 +41,11 @@ namespace Template
             else if (Velocity.Y < 0 - 3) // Y Velocity not smaller than -3
                 Velocity = new Vector2(0, -3);
 
-            Position += Velocity;
-
+           
             Rectangle = new Rectangle(Position.ToPoint(), Size);
 
 
-            if (Health < 0)
+            if (Health <= 0)
                 IsRemoved = true;
         }
         public override void Draw(SpriteBatch spriteBatch)

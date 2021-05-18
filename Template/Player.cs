@@ -14,8 +14,9 @@ namespace Template
         private GameTime oldGameTime;
         private KeyboardState oldA, a;
         private Texture2D bulletTex;
-        private int jumpCooldown;
-        
+
+        private int jumpCooldown, shootCooldown;
+
         private Vector2 acceleraion = new Vector2(0, 1);
 
 
@@ -28,7 +29,8 @@ namespace Template
 
         private void Shoot()
         {
-            if (a.IsKeyDown(Keys.Left))
+            if (a.IsKeyDown(Keys.Left) && shootCooldown == 0)
+            {
                 Children.Add(new Bullet(bulletTex, 1)
                 {
                     Parent = this,
@@ -36,8 +38,13 @@ namespace Template
                     Rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, 50, 50),
                     Speed = 5
                 });
+                shootCooldown = 30;
+                return;
+            }
+                
 
-            if (a.IsKeyDown(Keys.Right))
+            if (a.IsKeyDown(Keys.Right) && shootCooldown == 0)
+            {
                 Children.Add(new Bullet(bulletTex, 2)
                 {
                     Parent = this,
@@ -45,8 +52,13 @@ namespace Template
                     Rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, 50, 50),
                     Speed = 5
                 });
+                shootCooldown = 30;
+                return;
+            }
+                
 
-            if (a.IsKeyDown(Keys.Up))
+            if (a.IsKeyDown(Keys.Up) && shootCooldown == 0)
+            {
                 Children.Add(new Bullet(bulletTex, 3)
                 {
                     Parent = this,
@@ -54,6 +66,10 @@ namespace Template
                     Rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, 50, 50),
                     Speed = 5
                 });
+                shootCooldown = 30;
+                return;
+            }
+                
         }
         
 
@@ -70,6 +86,8 @@ namespace Template
 
            
             Shoot();
+            if (shootCooldown > 0)
+                shootCooldown--;
 
             if (oldGameTime == null)
                 oldGameTime = gameTime;
@@ -82,6 +100,7 @@ namespace Template
 
             if (jumpCooldown > 0)
                 jumpCooldown--;
+
 
             oldGameTime = gameTime;
             oldA = a;
