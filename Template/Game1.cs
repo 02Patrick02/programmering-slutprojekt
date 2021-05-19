@@ -23,7 +23,7 @@ namespace Template
 
         private const int BLOCK_SIZE = 80;
         private int enemySpawnRate = 60;
-        int Score = 0;
+        string Score = "0";
          
 
 
@@ -123,7 +123,7 @@ namespace Template
                   new FileStream("Score.txt",
                   FileMode.OpenOrCreate,
                   FileAccess.Write));
-            bw.Write(Score);
+            bw.Write("Score");
             bw.Close();
 
 
@@ -132,7 +132,7 @@ namespace Template
                  FileMode.OpenOrCreate,
                  FileAccess.Read));
 
-            Score = br.ReadInt32();
+            Score = br.ReadString();
             br.Close();
         }
 
@@ -182,12 +182,12 @@ namespace Template
                     
                         if (spriteA is Enemy && spriteB is Bullet)
                         {
-                            Score++;
+                            
                             bw = new BinaryWriter(
                                  new FileStream("Score.txt",
                                  FileMode.OpenOrCreate,
                                  FileAccess.Write));
-                            bw.Write(127);
+                            bw.Write(Score);
                             bw.Close();
                         }
                     }
