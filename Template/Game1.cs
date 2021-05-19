@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.IO;
 
 namespace Template
 {
@@ -18,9 +18,13 @@ namespace Template
 
         private List<BaseClass> sprites;
         private List<Player> player;
+        BinaryReader br;
+        BinaryWriter bw;
 
         private const int BLOCK_SIZE = 80;
         private int enemySpawnRate = 60;
+        int Score = 0;
+         
 
 
 
@@ -33,6 +37,8 @@ namespace Template
             Level1
         }
         GameState CurrentState = GameState.MainColor;
+
+       
 
 
 
@@ -112,8 +118,23 @@ namespace Template
                 }
             }
             player = sprites.OfType<Player>().ToList();
-        }
+          
+             bw = new BinaryWriter(
+                  new FileStream("Score.txt",
+                  FileMode.OpenOrCreate,
+                  FileAccess.Write));
+            bw.Write(Score);
+            bw.Close();
 
+
+            br = new BinaryReader(
+                 new FileStream("Score.txt",
+                 FileMode.OpenOrCreate,
+                 FileAccess.Read));
+
+            Score = br.ReadInt32();
+            br.Close();
+        }
 
         protected override void UnloadContent()
         {
@@ -154,9 +175,21 @@ namespace Template
                     if (spriteA is Bullet && spriteB is Bullet)
                         continue;
 
+
                     if (spriteA.Intersects(spriteB))
                     {
                         ((ICollidable)spriteA).OnCollide(spriteB);
+                    
+                        if (spriteA is Enemy && spriteB is Bullet)
+                        {
+                            Score++;
+                            bw = new BinaryWriter(
+                                 new FileStream("Score.txt",
+                                 FileMode.OpenOrCreate,
+                                 FileAccess.Write));
+                            bw.Write(127);
+                            bw.Close();
+                        }
                     }
                 }
                 spriteA.Position += spriteA.Velocity;
@@ -255,6 +288,7 @@ namespace Template
 
                 sprites.RemoveAt(i);
                 i--;
+                
             }
         }
     }
