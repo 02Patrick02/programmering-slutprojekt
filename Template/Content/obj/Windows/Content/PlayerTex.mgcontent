@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Elev/Desktop/Monogame-template-master/Template/Template/Content/PlayerTex.png</SourceFile>
-  <SourceTime>2021-04-07T09:18:50+02:00</SourceTime>
-  <DestFile>C:/Users/Elev/Desktop/Monogame-template-master/Template/Template/Content/bin/Windows/Content/PlayerTex.xnb</DestFile>
-  <DestTime>2021-04-13T10:08:00.5118178+02:00</DestTime>
+  <SourceFile>C:/Users/kulev/Desktop/programmering-slutprojekt-main/Template/Content/PlayerTex.png</SourceFile>
+  <SourceTime>2020-03-15T20:33:05.4374368+01:00</SourceTime>
+  <DestFile>C:/Users/kulev/Desktop/programmering-slutprojekt-main/Template/Content/bin/Windows/Content/PlayerTex.xnb</DestFile>
+  <DestTime>2021-05-24T22:46:44.5979612+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

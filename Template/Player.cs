@@ -114,7 +114,6 @@ namespace Template
             if (a.IsKeyDown(Keys.A))
                 Velocity = new Vector2(-10, Velocity.Y);
 
-            if (jumpCooldown != 0) return;
 
             if (a.IsKeyDown(Keys.Space) && !oldA.IsKeyDown(Keys.Space))
             {
@@ -127,6 +126,10 @@ namespace Template
         {
             if (sprite is Enemy)
                 IsRemoved = true;
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, Rectangle, Color.Red);
         }
     }
 }

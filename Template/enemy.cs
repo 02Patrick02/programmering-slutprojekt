@@ -18,7 +18,7 @@ namespace Template
 
         public void OnCollide(BaseClass sprite)
         {
-            if (sprite is Bullet)
+            if (sprite is Bullet) //enemy health minskar vid kollision med bullet
                 Health--;
         }
 
@@ -45,12 +45,12 @@ namespace Template
             Rectangle = new Rectangle(Position.ToPoint(), Size);
 
 
-            if (Health <= 0)
+            if (Health <= 0) //om enemy kommer till 0 health så tas den bort
                 IsRemoved = true;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, Rectangle, Color.Red);
+            spriteBatch.Draw(texture, Rectangle, Color.White);
         }
     }
 }

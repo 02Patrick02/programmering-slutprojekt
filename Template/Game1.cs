@@ -18,12 +18,13 @@ namespace Template
 
         private List<BaseClass> sprites;
         private List<Player> player;
-        BinaryReader br;
-        BinaryWriter bw;
+        private BinaryReader br;
+        private BinaryWriter bw;
+        private SpriteFont font;
 
         private const int BLOCK_SIZE = 80;
         private int enemySpawnRate = 60;
-        string Score = "0";
+        int Score = 0;
          
 
 
@@ -33,8 +34,7 @@ namespace Template
         public enum GameState
         {
             MainColor,
-            LevelSelect,
-            Level1
+            ColorSelect,
         }
         GameState CurrentState = GameState.MainColor;
 
@@ -81,15 +81,14 @@ namespace Template
 
         protected override void LoadContent()
         {
-          
-
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ground = Content.Load<Texture2D>("Ground");
             wall = Content.Load<Texture2D>("Wall");
             playerTex = Content.Load<Texture2D>("PlayerTex");
-            enemyTex = Content.Load<Texture2D>("enemy");
+            enemyTex = Content.Load<Texture2D>("Enemy");
             underground = Content.Load<Texture2D>("Underground");
             bulletTex = Content.Load<Texture2D>("Bullet");
+            font = Content.Load<SpriteFont>("Menu");
 
 
 
@@ -118,12 +117,14 @@ namespace Template
                 }
             }
             player = sprites.OfType<Player>().ToList();
-          
-             bw = new BinaryWriter(
+
+
+            //filhantering
+            bw = new BinaryWriter(
                   new FileStream("Score.txt",
                   FileMode.OpenOrCreate,
                   FileAccess.Write));
-            bw.Write("Score");
+            bw.Write(Score);
             bw.Close();
 
 
@@ -132,7 +133,7 @@ namespace Template
                  FileMode.OpenOrCreate,
                  FileAccess.Read));
 
-            Score = br.ReadString();
+            Score = br.ReadInt32();
             br.Close();
         }
 
@@ -180,9 +181,10 @@ namespace Template
                     {
                         ((ICollidable)spriteA).OnCollide(spriteB);
                     
-                        if (spriteA is Enemy && spriteB is Bullet)
+                        if (spriteA is Enemy && spriteB is Bullet )
                         {
-                            
+                            Score++;
+
                             bw = new BinaryWriter(
                                  new FileStream("Score.txt",
                                  FileMode.OpenOrCreate,
@@ -203,7 +205,7 @@ namespace Template
                 enemy.Update(gameTime, player[0].Position);
             }
 
-            if(rnd.Next(enemySpawnRate) == 0)
+            if(rnd.Next(enemySpawnRate) == 0) //spawnar enemy random
             {
                 sprites.Add(new Enemy(enemyTex)
                 {
@@ -216,20 +218,20 @@ namespace Template
 
 
 
-            switch (CurrentState)
+            switch (CurrentState) //byter färg när man trycker på W och S
             {
                 case GameState.MainColor:
                     if (Keyboard.GetState().IsKeyDown(Keys.W))
-                        CurrentState = GameState.LevelSelect;
+                        CurrentState = GameState.ColorSelect;
                     break;
 
-                case GameState.LevelSelect:
+                case GameState.ColorSelect:
                     if (Keyboard.GetState().IsKeyDown(Keys.S))
                         CurrentState = GameState.MainColor;
                     break;
             }
 
-            if (player[0].IsRemoved)
+            if (player[0].IsRemoved) //om spelaren tas bort  vid kollision stängs spelet av
                 Exit();
 
             RemoveSprites();
@@ -247,16 +249,18 @@ namespace Template
                 sprite.Draw(spriteBatch);
             }
 
-            switch (CurrentState)
+            switch (CurrentState) //byter färg 
             {
                 case GameState.MainColor:
                     GraphicsDevice.Clear(Color.White);
                     break;
 
-                case GameState.LevelSelect:
+                case GameState.ColorSelect:
                     GraphicsDevice.Clear(Color.Black);
                     break;
             }
+
+            spriteBatch.DrawString(font, "Score: " + Score.ToString(), new Vector2(50, 50), Color.White);
 
             
 
