@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Template
 {
-    interface ICollidable
+    interface ICollidable //de som ärver av denna kan kollidera
     {
         void OnCollide(BaseClass sprite);
     }
