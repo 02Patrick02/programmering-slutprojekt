@@ -16,9 +16,9 @@ namespace Template
             this.direction = direction;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime) 
         {
-            if (direction == 1)
+            if (direction == 1) 
                 Velocity = new Vector2(-Speed, 0);
             if (direction == 2)
                 Velocity = new Vector2(Speed, 0);

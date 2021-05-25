@@ -27,23 +27,23 @@ namespace Template
             this.bulletTex = bulletTex;
         }
 
-        private void Shoot()
+        private void Shoot()//skjut funktion
         {
-            if (a.IsKeyDown(Keys.Left) && shootCooldown == 0)
+            if (a.IsKeyDown(Keys.Left) && shootCooldown == 0) //skjuter åt vänster med en coldown på skotten
             {
-                Children.Add(new Bullet(bulletTex, 1)
+                Children.Add(new Bullet(bulletTex, 1) // lägger till nya skott i listan
                 {
                     Parent = this,
                     Position = this.Position,
                     Rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, 50, 50),
                     Speed = 5
                 });
-                shootCooldown = 30;
+                shootCooldown = 30; //cooldown på skotten
                 return;
             }
                 
 
-            if (a.IsKeyDown(Keys.Right) && shootCooldown == 0)
+            if (a.IsKeyDown(Keys.Right) && shootCooldown == 0) //skjuter åt höger med en coldown på skotten
             {
                 Children.Add(new Bullet(bulletTex, 2)
                 {
@@ -57,7 +57,7 @@ namespace Template
             }
                 
 
-            if (a.IsKeyDown(Keys.Up) && shootCooldown == 0)
+            if (a.IsKeyDown(Keys.Up) && shootCooldown == 0) //skjuter uppåt med en coldown på skotten
             {
                 Children.Add(new Bullet(bulletTex, 3)
                 {
@@ -106,30 +106,30 @@ namespace Template
             oldA = a;
         }
 
-        private void Move(KeyboardState a, KeyboardState oldA)
+        private void Move(KeyboardState a, KeyboardState oldA) //rörelse funktion för spelaren
         {
-            if (a.IsKeyDown(Keys.D))
+            if (a.IsKeyDown(Keys.D)) //spelaren rör sig åt höger med D
                 Velocity = new Vector2(10, Velocity.Y);
 
-            if (a.IsKeyDown(Keys.A))
+            if (a.IsKeyDown(Keys.A)) // spelaren rör sig åt vänster med A
                 Velocity = new Vector2(-10, Velocity.Y);
 
 
-            if (a.IsKeyDown(Keys.Space) && !oldA.IsKeyDown(Keys.Space))
+            if (a.IsKeyDown(Keys.Space) && !oldA.IsKeyDown(Keys.Space)) //spelaren hoppar på spacebar
             {
                 Velocity = new Vector2(Velocity.X, -25);
                 jumpCooldown = 45;
             }
         }
 
-        public void OnCollide(BaseClass sprite)
+        public void OnCollide(BaseClass sprite) 
         {
-            if (sprite is Enemy)
+            if (sprite is Enemy) // om spelaren kolliderar med enemy så tas spelaren bort 
                 IsRemoved = true;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, Rectangle, Color.Red);
+            spriteBatch.Draw(texture, Rectangle, Color.Red); //ritar ut spelaren 
         }
     }
 }

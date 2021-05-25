@@ -49,7 +49,7 @@ namespace Template
             texture = tex;
             Children = new List<BaseClass>();
         }
-        public bool Intersects(BaseClass sprite)
+        public bool Intersects(BaseClass sprite) 
         {
             if ((Velocity.X > 0 && IsTouchingLeft(sprite)) ||
                 (Velocity.X < 0 & IsTouchingRight(sprite)))

@@ -29,16 +29,16 @@ namespace Template
 
             Velocity = direction * Speed; // Direction --> Velocity
 
-            if (Velocity.X > 3) // X Velocity not bigger than 3
+            if (Velocity.X > 3) // X Velocity inte större än 3
                 Velocity = new Vector2 (3, 0);
 
-            else if (Velocity.X < 0 - 3) // X Velocity not smaller than -3
+            else if (Velocity.X < 0 - 3)
                 Velocity = new Vector2(-3, 0);
 
-            if (Velocity.Y > 3) // Y Velocity not bigger than 3
+            if (Velocity.Y > 3) 
                 Velocity = new Vector2(0, 3);
 
-            else if (Velocity.Y < 0 - 3) // Y Velocity not smaller than -3
+            else if (Velocity.Y < 0 - 3)
                 Velocity = new Vector2(0, -3);
 
            
